@@ -1,5 +1,9 @@
 #!/usr/bin/python3
-"""Defines unittests for state.py.
+"""Defines unittests for models/state.py.
+Unittest classes:
+    TestState_instantiation
+    TestState_save
+    TestState_to_dict
 """
 import os
 import models
@@ -10,7 +14,7 @@ from models.state import State
 
 
 class TestState_instantiation(unittest.TestCase):
-    """Unittests for testing instantiation"""
+    """Unittests for testing instantiation of the State class."""
 
     def test_no_args_instantiates(self):
         self.assertEqual(State, type(State()))
@@ -54,11 +58,11 @@ class TestState_instantiation(unittest.TestCase):
         dt = datetime.today()
         dt_repr = repr(dt)
         st = State()
-        st.id = "987654"
+        st.id = "123456"
         st.created_at = st.updated_at = dt
         ststr = st.__str__()
-        self.assertIn("[State] (987654)", ststr)
-        self.assertIn("'id': '987654'", ststr)
+        self.assertIn("[State] (123456)", ststr)
+        self.assertIn("'id': '123456'", ststr)
         self.assertIn("'created_at': " + dt_repr, ststr)
         self.assertIn("'updated_at': " + dt_repr, ststr)
 
@@ -80,7 +84,8 @@ class TestState_instantiation(unittest.TestCase):
 
 
 class TestState_save(unittest.TestCase):
-    """Unittests for saving method """
+    """Unittests for testing save method of the State class."""
+
     @classmethod
     def setUp(self):
         try:
@@ -130,7 +135,7 @@ class TestState_save(unittest.TestCase):
 
 
 class TestState_to_dict(unittest.TestCase):
-    """Unittests for  to_dict method"""
+    """Unittests for testing to_dict method of the State class."""
 
     def test_to_dict_type(self):
         self.assertTrue(dict, type(State().to_dict()))
@@ -144,9 +149,9 @@ class TestState_to_dict(unittest.TestCase):
 
     def test_to_dict_contains_added_attributes(self):
         st = State()
-        st.middle_name = "ALX"
+        st.middle_name = "Holberton"
         st.my_number = 98
-        self.assertEqual("ALX", st.middle_name)
+        self.assertEqual("Holberton", st.middle_name)
         self.assertIn("my_number", st.to_dict())
 
     def test_to_dict_datetime_attributes_are_strs(self):
@@ -159,10 +164,10 @@ class TestState_to_dict(unittest.TestCase):
     def test_to_dict_output(self):
         dt = datetime.today()
         st = State()
-        st.id = "987654"
+        st.id = "123456"
         st.created_at = st.updated_at = dt
         tdict = {
-            'id': '987654',
+            'id': '123456',
             '__class__': 'State',
             'created_at': dt.isoformat(),
             'updated_at': dt.isoformat(),
