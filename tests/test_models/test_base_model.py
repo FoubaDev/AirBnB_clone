@@ -10,8 +10,7 @@ from models.base_model import BaseModel
 
 
 class TestBaseModel_instantiation(unittest.TestCase):
-     """Unittests for  instantiation"""
-
+    """Unittests for  instantiation"""
     def no_args_instantiates_test(self):
         self.assertEqual(BaseModel, type(BaseModel()))
 
