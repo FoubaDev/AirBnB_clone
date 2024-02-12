@@ -14,21 +14,21 @@ from models.review import Review
 
 
 def parse(arg):
-    curly_braces = re.search(r"\{(.*?)\}", arg)
+    format_regular = re.search(r"\{(.*?)\}", arg)
     brackets = re.search(r"\[(.*?)\]", arg)
-    if curly_braces is None:
+    if format_regular is None:
         if brackets is None:
             return [i.strip(",") for i in split(arg)]
         else:
-            lexer = split(arg[:brackets.span()[0]])
-            retl = [i.strip(",") for i in lexer]
-            retl.append(brackets.group())
-            return retl
+            expression1 = split(arg[:brackets.span()[0]])
+            expression2 = [i.strip(",") for i in expression1]
+            expression2.append(brackets.group())
+            return expression2
     else:
-        lexer = split(arg[:curly_braces.span()[0]])
-        retl = [i.strip(",") for i in lexer]
-        retl.append(curly_braces.group())
-        return retl
+        expression1 = split(arg[:format_regular.span()[0]])
+        expression2 = [i.strip(",") for i in expression1]
+        expression2.append(format_regular.group())
+        return expression2
 
 
 class ALXCommand(cmd.Cmd):
@@ -50,11 +50,11 @@ class ALXCommand(cmd.Cmd):
     }
 
     def emptyline(self):
-        """Do nothing upon receiving an empty line."""
+        """Handle empty line."""
         pass
 
     def default(self, arg):
-        """Default behavior for cmd module when input is invalid"""
+        """Display cmd when invalid input"""
         argdict = {
             "all": self.do_all,
             "show": self.do_show,
@@ -84,8 +84,8 @@ class ALXCommand(cmd.Cmd):
         return True
 
     def do_create(self, arg):
-        """Usage: create <class>
-        Create a new class instance and print its id.
+        """
+        Create a new class.
         """
         argl = parse(arg)
         if len(argl) == 0:
@@ -97,8 +97,7 @@ class ALXCommand(cmd.Cmd):
             storage.save()
 
     def do_show(self, arg):
-        """Usage: show <class> <id> or <class>.show(<id>)
-        Display the string representation of a class instance of a given id.
+        """Show class.
         """
         argl = parse(arg)
         objdict = storage.all()
@@ -114,8 +113,7 @@ class ALXCommand(cmd.Cmd):
             print(objdict["{}.{}".format(argl[0], argl[1])])
 
     def do_destroy(self, arg):
-        """Usage: destroy <class> <id> or <class>.destroy(<id>)
-        Delete a class instance of a given id."""
+        """Destroy class by Id"""
         argl = parse(arg)
         objdict = storage.all()
         if len(argl) == 0:
@@ -131,9 +129,7 @@ class ALXCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, arg):
-        """Usage: all or all <class> or <class>.all()
-        Display string representations of all instances of a given class.
-        If no class is specified, displays all instantiated objects."""
+        """Retrieve all classes."""
         argl = parse(arg)
         if len(argl) > 0 and argl[0] not in ALXCommand.__classes:
             print("** class doesn't exist **")
@@ -147,8 +143,7 @@ class ALXCommand(cmd.Cmd):
             print(objl)
 
     def do_count(self, arg):
-        """Usage: count <class> or <class>.count()
-        Retrieve the number of instances of a given class."""
+        """Count class"""
         argl = parse(arg)
         count = 0
         for obj in storage.all().values():
@@ -157,11 +152,7 @@ class ALXCommand(cmd.Cmd):
         print(count)
 
     def do_update(self, arg):
-        """Usage: update <class> <id> <attribute_name> <attribute_value> or
-       <class>.update(<id>, <attribute_name>, <attribute_value>) or
-       <class>.update(<id>, <dictionary>)
-        Update a class instance of a given id by adding or updating
-        a given attribute key/value pair or dictionary."""
+        """Update class"""
         argl = parse(arg)
         objdict = storage.all()
 
